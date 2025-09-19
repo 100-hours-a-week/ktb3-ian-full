@@ -2,8 +2,8 @@ package baseball.player;
 
 import baseball.game.HitResult;
 
-import static baseball.util.RandomHitUtil.failGuessPowerHitter;
-import static baseball.util.RandomHitUtil.successGuessPowerHitter;
+import static baseball.player.RandomHitUtil.failGuessPowerHitter;
+import static baseball.player.RandomHitUtil.successGuessPowerHitter;
 
 public class PowerHitter extends Hitter {
 

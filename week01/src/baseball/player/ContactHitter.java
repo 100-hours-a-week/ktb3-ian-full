@@ -2,7 +2,7 @@ package baseball.player;
 
 import baseball.game.HitResult;
 
-import static baseball.util.RandomHitUtil.*;
+import static baseball.player.RandomHitUtil.*;
 
 public class ContactHitter extends Hitter {
 
