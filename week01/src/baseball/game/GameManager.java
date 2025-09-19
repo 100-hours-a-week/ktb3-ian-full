@@ -7,14 +7,7 @@ import static baseball.util.PrintUtil.printFormat;
 
 public class GameManager {
 
-    private static final int STRIKE_OUT_COUNT = 3;
-    private static final int BASE_ON_BALLS_COUNT = 4;
-    private static final int GAME_OVER_OUT_COUNT = 3;
-    private static final int FOUL_MAX_STRIKE_COUNT = 2;
-
-    private int ballCount;
-    private int strikeCount;
-    private int outCount;
+    private final CountManager countManager = new CountManager();
     private final User user;
     private final Computer computer;
     private final BaseManager baseManager;
@@ -26,7 +19,7 @@ public class GameManager {
     }
 
     public boolean isGameOver() {
-        return outCount == GAME_OVER_OUT_COUNT || user.getScore() > computer.getScore();
+        return countManager.isGameOver() || user.getScore() > computer.getScore();
     }
 
     public void process(HitResult hitResult) {
@@ -46,15 +39,13 @@ public class GameManager {
     public void display() {
         System.out.printf("| 투수: %s(com) | %d번 타자: %s(you) |%n", computer.getTeam().getPitcher().getName(), (user.getOrder() + 1), user.getTeam().getHitters().get(user.getOrder()).getName());
         System.out.printf("| %s(com): %d | %s(you): %d |%n", computer.getTeam().getName(), computer.getScore(), user.getTeam().getName(), user.getScore());
-        System.out.printf("| B: %d | S: %d | O: %d |%n", ballCount, strikeCount, outCount);
+        countManager.display();
         baseManager.display();
     }
 
     private void processFoul() {
         printFormat("파울입니다.");
-        if (strikeCount < FOUL_MAX_STRIKE_COUNT) {
-            strikeCount++;
-        }
+        countManager.foul();
     }
 
     private void processHomeRun() {
@@ -82,7 +73,8 @@ public class GameManager {
     }
 
     private void processStrike() {
-        if (++strikeCount == STRIKE_OUT_COUNT) {
+        countManager.increaseStrikeCount();
+        if (countManager.isStrikeOut()) {
             printFormat("루킹 삼진 아웃입니다!");
             processStrikeOut();
         } else {
@@ -91,7 +83,8 @@ public class GameManager {
     }
 
     private void processMiss() {
-        if (++strikeCount == STRIKE_OUT_COUNT) {
+        countManager.increaseStrikeCount();
+        if (countManager.isStrikeOut()) {
             printFormat("헛스윙 삼진 아웃입니다!");
             processStrikeOut();
         } else {
@@ -100,12 +93,13 @@ public class GameManager {
     }
 
     private void processStrikeOut() {
-        outCount++;
+        countManager.increaseOutCount();
         nextHitter();
     }
 
     private void processBall() {
-        if (++ballCount == BASE_ON_BALLS_COUNT) {
+        countManager.increaseBallCount();
+        if (countManager.isBaseOnBalls()) {
             printFormat("볼넷입니다.");
             user.plusScore(baseManager.runOneBase());
             nextHitter();
@@ -116,7 +110,7 @@ public class GameManager {
 
     private void nextHitter() {
         user.next();
-        ballCount = 0;
-        strikeCount = 0;
+        countManager.resetBallCount();
+        countManager.resetStrikeCount();
     }
 }
