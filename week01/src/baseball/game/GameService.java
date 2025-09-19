@@ -2,20 +2,28 @@ package baseball.game;
 
 import baseball.game.player.Computer;
 import baseball.game.player.User;
+import baseball.level.LevelSelector;
+import baseball.team.TeamSelector;
 
 public class GameService {
 
-    private final User user;
-    private final Computer computer;
-    private final GameManager gameManager;
+    private static final int USER_INIT_SCORE = 0;
 
-    public GameService(User user, Computer computer, GameManager gameManager) {
-        this.user = user;
-        this.computer = computer;
-        this.gameManager = gameManager;
+    private final TeamSelector teamSelector;
+    private final LevelSelector levelSelector;
+
+    public GameService(TeamSelector teamSelector, LevelSelector levelSelector) {
+        this.teamSelector = teamSelector;
+        this.levelSelector = levelSelector;
     }
 
-    public void playBall() {
+    public void start() {
+        User user = new User(teamSelector.select(), USER_INIT_SCORE);
+        Computer computer = new Computer(teamSelector.random(), levelSelector.select());
+        CountManager countManager = new CountManager();
+        BaseManager baseManager = new BaseManager();
+        GameManager gameManager = new GameManager(user, computer, countManager, baseManager);
+
         System.out.println("Play Ball!\n");
 
         while (!gameManager.isGameOver()) {

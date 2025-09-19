@@ -16,11 +16,11 @@ public class GameManager {
     private final CountManager countManager;
     private final Map<HitResult, GameProcess> hitResultToGameProcess;
 
-    public GameManager(User user, Computer computer, BaseManager baseManager) {
+    public GameManager(User user, Computer computer, CountManager countManager, BaseManager baseManager) {
         this.user = user;
         this.computer = computer;
         this.baseManager = baseManager;
-        this.countManager = new CountManager();
+        this.countManager = countManager;
         this.hitResultToGameProcess = Map.of(
                 BALL, new BallProcess(user, baseManager, countManager),
                 STRIKE, new StrikeProcess(user, countManager),
