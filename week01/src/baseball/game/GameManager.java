@@ -7,6 +7,11 @@ import static baseball.util.PrintUtil.printFormat;
 
 public class GameManager {
 
+    private static final int STRIKE_OUT_COUNT = 3;
+    private static final int BASE_ON_BALLS_COUNT = 4;
+    private static final int GAME_OVER_OUT_COUNT = 3;
+    private static final int FOUL_MAX_STRIKE_COUNT = 2;
+
     private int ballCount;
     private int strikeCount;
     private int outCount;
@@ -21,7 +26,7 @@ public class GameManager {
     }
 
     public boolean isGameOver() {
-        return outCount == 3 || user.getScore() > computer.getScore();
+        return outCount == GAME_OVER_OUT_COUNT || user.getScore() > computer.getScore();
     }
 
     public void process(HitResult hitResult) {
@@ -47,7 +52,7 @@ public class GameManager {
 
     private void processFoul() {
         printFormat("파울입니다.");
-        if (strikeCount < 2) {
+        if (strikeCount < FOUL_MAX_STRIKE_COUNT) {
             strikeCount++;
         }
     }
@@ -77,7 +82,7 @@ public class GameManager {
     }
 
     private void processStrike() {
-        if (++strikeCount == 3) {
+        if (++strikeCount == STRIKE_OUT_COUNT) {
             printFormat("루킹 삼진 아웃입니다!");
             processStrikeOut();
         } else {
@@ -86,7 +91,7 @@ public class GameManager {
     }
 
     private void processMiss() {
-        if (++strikeCount == 3) {
+        if (++strikeCount == STRIKE_OUT_COUNT) {
             printFormat("헛스윙 삼진 아웃입니다!");
             processStrikeOut();
         } else {
@@ -100,7 +105,7 @@ public class GameManager {
     }
 
     private void processBall() {
-        if (++ballCount == 4) {
+        if (++ballCount == BASE_ON_BALLS_COUNT) {
             printFormat("볼넷입니다.");
             user.plusScore(baseManager.runOneBase());
             nextHitter();
