@@ -1,19 +1,12 @@
 package baseball.level;
 
-import java.util.Scanner;
+import baseball.InputManager;
 
 import static baseball.level.Level.*;
-import static baseball.util.InputUtil.inputSelect;
 import static baseball.util.PrintUtil.invalidInput;
 import static baseball.util.PrintUtil.printFormat;
 
 public class LevelSelector {
-
-    private final Scanner scanner;
-
-    public LevelSelector(Scanner scanner) {
-        this.scanner = scanner;
-    }
 
     public int select() {
         while (true) {
@@ -23,7 +16,7 @@ public class LevelSelector {
                     - HARD 모드(com 5점): 3,
                     """);
 
-            String input = inputSelect(scanner, "원하는 난이도를 선택해주세요: ");
+            String input = InputManager.readLine("원하는 난이도를 선택해주세요: ");
 
             switch (input) {
                 case "1" -> {

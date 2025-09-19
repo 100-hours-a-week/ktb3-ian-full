@@ -3,17 +3,13 @@ package baseball.game;
 import baseball.game.player.Computer;
 import baseball.game.player.User;
 
-import java.util.Scanner;
-
 public class Game {
 
-    private final Scanner scanner;
     private final User user;
     private final Computer computer;
     private final GameManager gameManager;
 
-    public Game(Scanner scanner, User user, Computer computer, GameManager gameManager) {
-        this.scanner = scanner;
+    public Game(User user, Computer computer, GameManager gameManager) {
         this.user = user;
         this.computer = computer;
         this.gameManager = gameManager;
@@ -24,7 +20,7 @@ public class Game {
 
         while (!gameManager.isGameOver()) {
             gameManager.display();
-            HitResult hitResult = user.hit(scanner, computer.pitch());
+            HitResult hitResult = user.hit(computer.pitch());
             gameManager.process(hitResult);
         }
 

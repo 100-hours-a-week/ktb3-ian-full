@@ -4,8 +4,6 @@ import baseball.game.HitResult;
 import baseball.team.Team;
 import baseball.player.Hitter;
 
-import java.util.Scanner;
-
 import static baseball.util.InputUtil.selectZone;
 
 public class User extends GamePlayer {
@@ -16,9 +14,9 @@ public class User extends GamePlayer {
         super(team, score);
     }
 
-    public HitResult hit(Scanner scanner, int actualZone) {
+    public HitResult hit(int actualZone) {
         Hitter hitter = getTeam().getHitters().get(order);
-        int expectedZone = selectZone(scanner);
+        int expectedZone = selectZone();
 
         if (expectedZone == 0) {
             return hitter.doNotHit(actualZone);

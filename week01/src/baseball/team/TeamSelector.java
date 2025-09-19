@@ -1,26 +1,24 @@
 package baseball.team;
 
+import baseball.InputManager;
+
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
-import static baseball.util.InputUtil.inputSelect;
 import static baseball.util.PrintUtil.*;
 
 public class TeamSelector {
 
-    private final Scanner scanner;
     private final TeamRepository teamRepository;
 
-    public TeamSelector(Scanner scanner, TeamRepository teamRepository) {
-        this.scanner = scanner;
+    public TeamSelector(TeamRepository teamRepository) {
         this.teamRepository = teamRepository;
     }
 
     public Team select() {
         while (true) {
             teamNames();
-            String input = inputSelect(scanner, "원하는 팀을 선택해주세요: ");
+            String input = InputManager.readLine("원하는 팀을 선택해주세요: ");
 
             if (input == null || input.isEmpty()) {
                 invalidInput();
