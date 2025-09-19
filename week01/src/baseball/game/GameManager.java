@@ -2,20 +2,35 @@ package baseball.game;
 
 import baseball.game.player.Computer;
 import baseball.game.player.User;
+import baseball.game.process.*;
 
-import static baseball.util.PrintUtil.printFormat;
+import java.util.Map;
+
+import static baseball.game.HitResult.*;
 
 public class GameManager {
 
-    private final CountManager countManager = new CountManager();
     private final User user;
     private final Computer computer;
     private final BaseManager baseManager;
+    private final CountManager countManager;
+    private final Map<HitResult, GameProcess> hitResultToGameProcess;
 
     public GameManager(User user, Computer computer, BaseManager baseManager) {
         this.user = user;
         this.computer = computer;
         this.baseManager = baseManager;
+        this.countManager = new CountManager();
+        this.hitResultToGameProcess = Map.of(
+                BALL, new BallProcess(user, baseManager, countManager),
+                STRIKE, new StrikeProcess(user, countManager),
+                MISS, new MissProcess(user, countManager),
+                SINGLE, new SingleProcess(user, baseManager, countManager),
+                DOUBLE, new DoubleProcess(user, baseManager, countManager),
+                TRIPLE, new TripleProcess(user, baseManager, countManager),
+                HOMERUN, new HomeRunProcess(user, baseManager, countManager),
+                FOUL, new FoulProcess(countManager)
+        );
     }
 
     public boolean isGameOver() {
@@ -24,16 +39,7 @@ public class GameManager {
 
     public void process(HitResult hitResult) {
         System.out.print("결과: ");
-        switch (hitResult) {
-            case BALL -> processBall();
-            case STRIKE -> processStrike();
-            case MISS -> processMiss();
-            case SINGLE -> processSingle();
-            case DOUBLE -> processDouble();
-            case TRIPLE -> processTriple();
-            case HOMERUN -> processHomeRun();
-            case FOUL -> processFoul();
-        }
+        hitResultToGameProcess.get(hitResult).process();
     }
 
     public void display() {
@@ -41,76 +47,5 @@ public class GameManager {
         System.out.printf("| %s(com): %d | %s(you): %d |%n", computer.getTeam().getName(), computer.getScore(), user.getTeam().getName(), user.getScore());
         countManager.display();
         baseManager.display();
-    }
-
-    private void processFoul() {
-        printFormat("파울입니다.");
-        countManager.foul();
-    }
-
-    private void processHomeRun() {
-        printFormat("홈런입니다!");
-        user.plusScore(baseManager.runFourBase());
-        nextHitter();
-    }
-
-    private void processTriple() {
-        printFormat("3루타입니다!");
-        user.plusScore(baseManager.runThreeBase());
-        nextHitter();
-    }
-
-    private void processDouble() {
-        printFormat("2루타입니다!");
-        user.plusScore(baseManager.runTwoBase());
-        nextHitter();
-    }
-
-    private void processSingle() {
-        printFormat("안타입니다!");
-        user.plusScore(baseManager.runOneBase());
-        nextHitter();
-    }
-
-    private void processStrike() {
-        countManager.increaseStrikeCount();
-        if (countManager.isStrikeOut()) {
-            printFormat("루킹 삼진 아웃입니다!");
-            processStrikeOut();
-        } else {
-            printFormat("스트라이크입니다.");
-        }
-    }
-
-    private void processMiss() {
-        countManager.increaseStrikeCount();
-        if (countManager.isStrikeOut()) {
-            printFormat("헛스윙 삼진 아웃입니다!");
-            processStrikeOut();
-        } else {
-            printFormat("헛스윙 스트라이크입니다.");
-        }
-    }
-
-    private void processStrikeOut() {
-        countManager.increaseOutCount();
-        nextHitter();
-    }
-
-    private void processBall() {
-        countManager.increaseBallCount();
-        if (countManager.isBaseOnBalls()) {
-            printFormat("볼넷입니다.");
-            user.plusScore(baseManager.runOneBase());
-            nextHitter();
-        } else {
-            printFormat("볼입니다.");
-        }
-    }
-
-    private void nextHitter() {
-        user.next();
-        countManager.resetBallCount();
-        countManager.resetStrikeCount();
     }
 }
