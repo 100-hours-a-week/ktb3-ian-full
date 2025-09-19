@@ -3,13 +3,13 @@ package baseball.game;
 import baseball.game.player.Computer;
 import baseball.game.player.User;
 
-public class Game {
+public class GameService {
 
     private final User user;
     private final Computer computer;
     private final GameManager gameManager;
 
-    public Game(User user, Computer computer, GameManager gameManager) {
+    public GameService(User user, Computer computer, GameManager gameManager) {
         this.user = user;
         this.computer = computer;
         this.gameManager = gameManager;

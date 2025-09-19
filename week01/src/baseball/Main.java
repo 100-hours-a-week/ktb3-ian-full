@@ -33,8 +33,8 @@ public class Main {
                     User user = new User(teamSelector.select(), 0);
                     Computer computer = new Computer(teamSelector.random(), levelSelector.select());
                     GameManager gameManager = new GameManager(user, computer, new BaseManager());
-                    Game game = new Game(user, computer, gameManager);
-                    game.playBall();
+                    GameService gameService = new GameService(user, computer, gameManager);
+                    gameService.playBall();
                 }
                 case "2" -> {
                     System.out.println("게임을 종료합니다.");
