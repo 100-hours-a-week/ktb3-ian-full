@@ -12,6 +12,10 @@ public class TeamData {
         return List.of("LG", "한화", "SSG", "KT", "롯데", "삼성", "NC", "KIA", "두산", "키움");
     }
 
+    public static Team getDefaultTeam() {
+        return LG_TWINS();
+    }
+
     public static Team LG_TWINS() {
         return new Team("LG 트윈스", new Pitcher("임찬규"),
                 List.of(

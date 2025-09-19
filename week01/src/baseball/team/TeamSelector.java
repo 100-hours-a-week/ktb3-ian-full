@@ -44,6 +44,6 @@ public class TeamSelector {
         int idx = random.nextInt(teamNames.size());
 
         return teamRepository.findByName(teamNames.get(idx))
-                .orElse(null);
+                .orElse(TeamData.getDefaultTeam());
     }
 }
