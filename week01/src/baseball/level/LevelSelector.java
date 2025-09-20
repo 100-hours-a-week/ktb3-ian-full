@@ -10,11 +10,11 @@ public class LevelSelector {
 
     public int select() {
         while (true) {
-            System.out.println("""
-                    - EASY 모드(com 1점): 1,
-                    - MEDIUM 모드(com 3점): 2,
-                    - HARD 모드(com 5점): 3,
-                    """);
+            System.out.printf("""
+                    - EASY 모드(com %d점): 1,
+                    - MEDIUM 모드(com %d점): 2,
+                    - HARD 모드(com %d점): 3,
+                    %n""", EASY.getScore(), MEDIUM.getScore(), HARD.getScore());
 
             String input = InputManager.readLine("원하는 난이도를 선택해주세요: ");
 
