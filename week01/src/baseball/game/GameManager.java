@@ -11,15 +11,15 @@ public class GameManager {
     private final Computer computer;
     private final BaseManager baseManager;
     private final CountManager countManager;
-    private final UserHitInput userHitInput;
+    private final HitInputManager hitInputManager;
     private final Map<HitResult, GameProcess> hitResultToGameProcess;
 
-    public GameManager(User user, Computer computer, BaseManager baseManager, CountManager countManager, UserHitInput userHitInput, Map<HitResult, GameProcess> hitResultToGameProcess) {
+    public GameManager(User user, Computer computer, BaseManager baseManager, CountManager countManager, HitInputManager hitInputManager, Map<HitResult, GameProcess> hitResultToGameProcess) {
         this.user = user;
         this.computer = computer;
         this.baseManager = baseManager;
         this.countManager = countManager;
-        this.userHitInput = userHitInput;
+        this.hitInputManager = hitInputManager;
         this.hitResultToGameProcess = hitResultToGameProcess;
     }
 
@@ -28,7 +28,7 @@ public class GameManager {
     }
 
     public void process() {
-        int expectedZone = userHitInput.selectZone();
+        int expectedZone = hitInputManager.selectZone();
         int actualZone = computer.pitch();
 
         System.out.print("결과: ");

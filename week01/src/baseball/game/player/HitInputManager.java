@@ -4,15 +4,15 @@ import baseball.util.PrintUtil;
 
 import java.util.concurrent.*;
 
-public class UserHitInput {
+public class HitInputManager {
 
     private final ExecutorService executor;
-    private final HitInputTask task;
+    private final HitInputTask hitInputTask;
     private final TimerTask timerTask;
 
-    public UserHitInput(ExecutorService executor, HitInputTask task, TimerTask timerTask) {
+    public HitInputManager(ExecutorService executor, HitInputTask hitInputTask, TimerTask timerTask) {
         this.executor = executor;
-        this.task = task;
+        this.hitInputTask = hitInputTask;
         this.timerTask = timerTask;
     }
 
@@ -20,7 +20,7 @@ public class UserHitInput {
         PrintUtil.strikeZone();
         System.out.printf("%d초 이내에 타격할 위치를 선택해주세요(스윙하지 않으려면 %d번을 입력해주세요): %n", TimeOut.SELECT_ZONE.getValue(), ZoneNumber.BALL.getValue());
 
-        Future<Integer> resultInput = executor.submit(task);
+        Future<Integer> resultInput = executor.submit(hitInputTask);
         Future<?> resultTimer = executor.submit(timerTask);
 
         int selected = ZoneNumber.BALL.getValue();

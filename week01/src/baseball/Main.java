@@ -29,7 +29,7 @@ public class Main {
             TeamRepository teamRepository = new TeamRepository();
             TeamSelector teamSelector = new TeamSelector(teamRepository);
             LevelSelector levelSelector = new LevelSelector();
-            UserHitInput userHitInput = new UserHitInput(executor, new HitInputTask(), new TimerTask());
+            HitInputManager hitInputManager = new HitInputManager(executor, new HitInputTask(), new TimerTask());
 
             System.out.println("===== KTB 프로야구 게임에 오신걸 환영합니다! =====\n");
 
@@ -44,7 +44,7 @@ public class Main {
                 switch (input) {
                     case "1" -> {
                         System.out.println("게임을 시작합니다.");
-                        GameService gameService = setUp(teamSelector, levelSelector, userHitInput);
+                        GameService gameService = setUp(teamSelector, levelSelector, hitInputManager);
                         gameService.start();
                     }
                     case "2" -> {
@@ -57,7 +57,7 @@ public class Main {
         }
     }
 
-    private static GameService setUp(TeamSelector teamSelector, LevelSelector levelSelector, UserHitInput userHitInput) {
+    private static GameService setUp(TeamSelector teamSelector, LevelSelector levelSelector, HitInputManager hitInputManager) {
         CountManager countManager = new CountManager();
         BaseManager baseManager = new BaseManager();
         User user = new User(teamSelector.select(), USER_INIT_SCORE);
@@ -72,7 +72,7 @@ public class Main {
                 HOMERUN, new HomeRunProcess(user, baseManager, countManager),
                 FOUL, new FoulProcess(countManager)
         );
-        GameManager gameManager = new GameManager(user, computer, baseManager, countManager, userHitInput, hitResultToGameProcess);
+        GameManager gameManager = new GameManager(user, computer, baseManager, countManager, hitInputManager, hitResultToGameProcess);
         return new GameService(gameManager);
     }
 }
