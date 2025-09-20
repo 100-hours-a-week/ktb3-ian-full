@@ -1,12 +1,9 @@
 package baseball.game;
 
-import baseball.game.player.Computer;
-import baseball.game.player.User;
+import baseball.game.player.*;
 import baseball.game.process.*;
 
 import java.util.Map;
-
-import static baseball.game.HitResult.*;
 
 public class GameManager {
 
@@ -14,31 +11,29 @@ public class GameManager {
     private final Computer computer;
     private final BaseManager baseManager;
     private final CountManager countManager;
+    private final UserHitInput userHitInput;
     private final Map<HitResult, GameProcess> hitResultToGameProcess;
 
-    public GameManager(User user, Computer computer, CountManager countManager, BaseManager baseManager) {
+    public GameManager(User user, Computer computer, BaseManager baseManager, CountManager countManager, UserHitInput userHitInput, Map<HitResult, GameProcess> hitResultToGameProcess) {
         this.user = user;
         this.computer = computer;
         this.baseManager = baseManager;
         this.countManager = countManager;
-        this.hitResultToGameProcess = Map.of(
-                BALL, new BallProcess(user, baseManager, countManager),
-                STRIKE, new StrikeProcess(user, countManager),
-                MISS, new MissProcess(user, countManager),
-                SINGLE, new SingleProcess(user, baseManager, countManager),
-                DOUBLE, new DoubleProcess(user, baseManager, countManager),
-                TRIPLE, new TripleProcess(user, baseManager, countManager),
-                HOMERUN, new HomeRunProcess(user, baseManager, countManager),
-                FOUL, new FoulProcess(countManager)
-        );
+        this.userHitInput = userHitInput;
+        this.hitResultToGameProcess = hitResultToGameProcess;
     }
 
     public boolean isGameOver() {
         return countManager.isGameOver() || user.getScore() > computer.getScore();
     }
 
-    public void process(HitResult hitResult) {
+    public void process() {
+        int expectedZone = userHitInput.selectZone();
+        int actualZone = computer.pitch();
+
         System.out.print("결과: ");
+
+        HitResult hitResult = user.hit(expectedZone, actualZone);
         hitResultToGameProcess.get(hitResult).process();
     }
 
@@ -47,5 +42,16 @@ public class GameManager {
         System.out.printf("| %s(com): %d | %s(you): %d |%n", computer.getTeam().getName(), computer.getScore(), user.getTeam().getName(), user.getScore());
         countManager.display();
         baseManager.display();
+    }
+
+    public void finishGame() {
+        System.out.println("게임이 종료되었습니다.");
+        System.out.printf("최종 스코어: | %s(com): %d | %s(you): %d |%n", computer.getTeam().getName(), computer.getScore(), user.getTeam().getName(), user.getScore());
+        if (computer.getScore() < user.getScore()) {
+            System.out.println("승리를 축하드립니다!");
+        } else {
+            System.out.println("다음 번엔 꼭 이기길 바래요!");
+        }
+        System.out.println();
     }
 }

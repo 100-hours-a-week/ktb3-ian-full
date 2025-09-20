@@ -1,52 +1,23 @@
 package baseball.game;
 
 import baseball.game.player.*;
-import baseball.level.LevelSelector;
-import baseball.team.TeamSelector;
-
-import java.util.concurrent.ExecutorService;
 
 public class GameService {
 
-    private static final int USER_INIT_SCORE = 0;
+    private final GameManager gameManager;
 
-    private final TeamSelector teamSelector;
-    private final LevelSelector levelSelector;
-    private final ExecutorService executor;
-
-    public GameService(TeamSelector teamSelector, LevelSelector levelSelector, ExecutorService executor) {
-        this.teamSelector = teamSelector;
-        this.levelSelector = levelSelector;
-        this.executor = executor;
+    public GameService(GameManager gameManager) {
+        this.gameManager = gameManager;
     }
 
     public void start() {
-        User user = new User(teamSelector.select(), USER_INIT_SCORE);
-        Computer computer = new Computer(teamSelector.random(), levelSelector.select());
-        CountManager countManager = new CountManager();
-        BaseManager baseManager = new BaseManager();
-        GameManager gameManager = new GameManager(user, computer, countManager, baseManager);
-        UserHitInput userHitInput = new UserHitInput(executor);
-        HitInputTask hitInputTask = new HitInputTask();
-        TimerTask timerTask = new TimerTask();
-
         System.out.println("Play Ball!\n");
 
         while (!gameManager.isGameOver()) {
             gameManager.display();
-            int expectedZone = userHitInput.selectZone(hitInputTask, timerTask);
-            int actualZone = computer.pitch();
-            HitResult hitResult = user.hit(expectedZone, actualZone);
-            gameManager.process(hitResult);
+            gameManager.process();
         }
 
-        System.out.println("게임이 종료되었습니다.");
-        System.out.printf("최종 스코어: | %s(com): %d | %s(you): %d |%n", computer.getTeam().getName(), computer.getScore(), user.getTeam().getName(), user.getScore());
-        if (computer.getScore() < user.getScore()) {
-            System.out.println("승리를 축하드립니다!");
-        } else {
-            System.out.println("다음 번엔 꼭 이기길 바래요!");
-        }
-        System.out.println();
+        gameManager.finishGame();
     }
 }

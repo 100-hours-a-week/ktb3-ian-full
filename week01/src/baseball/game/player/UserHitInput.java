@@ -7,12 +7,16 @@ import java.util.concurrent.*;
 public class UserHitInput {
 
     private final ExecutorService executor;
+    private final HitInputTask task;
+    private final TimerTask timerTask;
 
-    public UserHitInput(ExecutorService executor) {
+    public UserHitInput(ExecutorService executor, HitInputTask task, TimerTask timerTask) {
         this.executor = executor;
+        this.task = task;
+        this.timerTask = timerTask;
     }
 
-    public int selectZone(HitInputTask task, TimerTask timerTask) {
+    public int selectZone() {
         PrintUtil.strikeZone();
         System.out.printf("%d초 이내에 타격할 위치를 선택해주세요(스윙하지 않으려면 %d번을 입력해주세요): %n", TimeOut.SELECT_ZONE.getValue(), ZoneNumber.BALL.getValue());
 
