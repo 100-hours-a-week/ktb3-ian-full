@@ -10,12 +10,14 @@ import java.util.concurrent.locks.ReentrantLock;
 public class HitTask implements Runnable {
 
     private final GameProcess gameProcess;
+    private final CountManager countManager;
     private final ReentrantLock lock;
     private final Condition stolenBaseCondition;
     private final AtomicBoolean isStolenBaseDone;
 
-    public HitTask(GameProcess gameProcess, ReentrantLock lock, Condition stolenBaseCondition, AtomicBoolean isStolenBaseDone) {
+    public HitTask(GameProcess gameProcess, CountManager countManager, ReentrantLock lock, Condition stolenBaseCondition, AtomicBoolean isStolenBaseDone) {
         this.gameProcess = gameProcess;
+        this.countManager = countManager;
         this.lock = lock;
         this.stolenBaseCondition = stolenBaseCondition;
         this.isStolenBaseDone = isStolenBaseDone;
@@ -29,14 +31,18 @@ public class HitTask implements Runnable {
                 while (!isStolenBaseDone.get()) {
                     stolenBaseCondition.await();
                 }
-                gameProcess.process();
+                if (!countManager.isGameOver()) {
+                    gameProcess.process();
+                }
             } catch (InterruptedException e) {
                 throw new RuntimeException("인터럽트가 발생했습니다.");
             } finally {
                 lock.unlock();
             }
         } else {
-            gameProcess.process();
+            if (!countManager.isGameOver()) {
+                gameProcess.process();
+            }
         }
     }
 }

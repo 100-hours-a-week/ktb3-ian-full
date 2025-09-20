@@ -29,7 +29,7 @@ public class ProcessManager {
 
     public void process(GameProcess gameProcess) {
         try {
-            Future<?> resultHit = executor.submit(new HitTask(gameProcess, lock, stolenBaseCondition, isStolenBaseDone));
+            Future<?> resultHit = executor.submit(new HitTask(gameProcess, countManager, lock, stolenBaseCondition, isStolenBaseDone));
             Future<?> resultStolenBase = executor.submit(new StolenBaseTask(baseManager, countManager, lock, stolenBaseCondition, isStolenBaseDone));
 
             resultStolenBase.get();
