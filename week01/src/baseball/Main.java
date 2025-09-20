@@ -14,12 +14,11 @@ import static baseball.util.PrintUtil.invalidInput;
 public class Main {
 
     public static void main(String[] args) {
-        try (ExecutorService executor = Executors.newFixedThreadPool(1)) {
+        try (ExecutorService executor = Executors.newFixedThreadPool(2)) {
             TeamRepository teamRepository = new TeamRepository();
             TeamSelector teamSelector = new TeamSelector(teamRepository);
             LevelSelector levelSelector = new LevelSelector();
-            HitInputTask hitInputTask = new HitInputTask();
-            GameService gameService = new GameService(teamSelector, levelSelector, executor, hitInputTask);
+            GameService gameService = new GameService(teamSelector, levelSelector, executor);
 
             System.out.println("===== KTB 프로야구 게임에 오신걸 환영합니다! =====\n");
 
