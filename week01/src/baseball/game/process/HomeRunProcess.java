@@ -6,22 +6,15 @@ import baseball.game.player.User;
 
 import static baseball.util.PrintUtil.printFormat;
 
-public class HomeRunProcess implements GameProcess {
-
-    private final User user;
-    private final BaseManager baseManager;
-    private final CountManager countManager;
+public class HomeRunProcess extends OnBaseProcess {
 
     public HomeRunProcess(User user, BaseManager baseManager, CountManager countManager) {
-        this.user = user;
-        this.baseManager = baseManager;
-        this.countManager = countManager;
+        super(user, baseManager, countManager);
     }
 
     @Override
     public void process() {
         printFormat("홈런입니다!");
-        user.plusScore(baseManager.runFourBase());
-        nextHitter(user, countManager);
+        process(HOMERUN);
     }
 }

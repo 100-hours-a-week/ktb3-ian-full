@@ -6,22 +6,15 @@ import baseball.game.player.User;
 
 import static baseball.util.PrintUtil.printFormat;
 
-public class TripleProcess implements GameProcess {
-
-    private final User user;
-    private final BaseManager baseManager;
-    private final CountManager countManager;
+public class TripleProcess extends OnBaseProcess {
 
     public TripleProcess(User user, BaseManager baseManager, CountManager countManager) {
-        this.user = user;
-        this.baseManager = baseManager;
-        this.countManager = countManager;
+        super(user, baseManager, countManager);
     }
 
     @Override
     public void process() {
         printFormat("3루타입니다!");
-        user.plusScore(baseManager.runThreeBase());
-        nextHitter(user, countManager);
+        process(TRIPLE);
     }
 }

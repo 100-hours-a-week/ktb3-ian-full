@@ -8,20 +8,13 @@ public class BaseManager {
         bases = new boolean[3];
     }
 
-    public int runOneBase() {
-        return moveBase(1);
-    }
+    public int moveBase(int runBase) {
+        int score = 0;
 
-    public int runTwoBase() {
-        return moveBase(2);
-    }
+        score += moveRunner(runBase);
+        score += moveHitter(runBase);
 
-    public int runThreeBase() {
-        return moveBase(3);
-    }
-
-    public int runFourBase() {
-        return moveBase(4);
+        return score;
     }
 
     public void display() {
@@ -33,15 +26,6 @@ public class BaseManager {
 
     private char showBase(boolean base) {
         return base ? '■' : '□';
-    }
-
-    private int moveBase(int runBase) {
-        int score = 0;
-
-        score += moveRunner(runBase);
-        score += moveHitter(runBase);
-
-        return score;
     }
 
     private int moveRunner(int runBase) {

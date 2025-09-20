@@ -6,22 +6,15 @@ import baseball.game.player.User;
 
 import static baseball.util.PrintUtil.printFormat;
 
-public class SingleProcess implements GameProcess {
-
-    private final User user;
-    private final BaseManager baseManager;
-    private final CountManager countManager;
+public class SingleProcess extends OnBaseProcess {
 
     public SingleProcess(User user, BaseManager baseManager, CountManager countManager) {
-        this.user = user;
-        this.baseManager = baseManager;
-        this.countManager = countManager;
+        super(user, baseManager, countManager);
     }
 
     @Override
     public void process() {
         printFormat("안타입니다!");
-        user.plusScore(baseManager.runOneBase());
-        nextHitter(user, countManager);
+        process(SINGLE);
     }
 }
