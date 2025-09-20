@@ -16,4 +16,20 @@ public class InputManager {
             throw new RuntimeException("입력 오류가 발생했습니다.");
         }
     }
+
+    public static String readLine() {
+        try {
+            return br.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException("입력 오류가 발생했습니다.");
+        }
+    }
+
+    public static boolean isReady() {
+        try {
+            return br.ready();
+        } catch (IOException e) {
+            throw new RuntimeException("입력 오류가 발생했습니다.");
+        }
+    }
 }

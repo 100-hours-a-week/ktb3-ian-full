@@ -1,9 +1,13 @@
 package baseball.game;
 
 import baseball.game.player.Computer;
+import baseball.game.player.HitInputTask;
 import baseball.game.player.User;
+import baseball.game.player.UserHitInput;
 import baseball.level.LevelSelector;
 import baseball.team.TeamSelector;
+
+import java.util.concurrent.ExecutorService;
 
 public class GameService {
 
@@ -11,10 +15,14 @@ public class GameService {
 
     private final TeamSelector teamSelector;
     private final LevelSelector levelSelector;
+    private final ExecutorService executor;
+    private final HitInputTask hitInputTask;
 
-    public GameService(TeamSelector teamSelector, LevelSelector levelSelector) {
+    public GameService(TeamSelector teamSelector, LevelSelector levelSelector, ExecutorService executor, HitInputTask hitInputTask) {
         this.teamSelector = teamSelector;
         this.levelSelector = levelSelector;
+        this.executor = executor;
+        this.hitInputTask = hitInputTask;
     }
 
     public void start() {
@@ -23,12 +31,15 @@ public class GameService {
         CountManager countManager = new CountManager();
         BaseManager baseManager = new BaseManager();
         GameManager gameManager = new GameManager(user, computer, countManager, baseManager);
+        UserHitInput userHitInput = new UserHitInput(executor);
 
         System.out.println("Play Ball!\n");
 
         while (!gameManager.isGameOver()) {
             gameManager.display();
-            HitResult hitResult = user.hit(computer.pitch());
+            int expectedZone = userHitInput.selectZone(hitInputTask);
+            int actualZone = computer.pitch();
+            HitResult hitResult = user.hit(expectedZone, actualZone);
             gameManager.process(hitResult);
         }
 
