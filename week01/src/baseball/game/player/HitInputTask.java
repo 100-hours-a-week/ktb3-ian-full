@@ -14,7 +14,7 @@ public class HitInputTask implements Callable<Integer> {
     public Integer call() {
         while (true) {
             PrintUtil.strikeZone();
-            System.out.printf("5초 이내에 타격할 위치를 선택해주세요(스윙하지 않으려면 %d번을 입력해주세요): ", ZoneNumber.BALL.getValue());
+            System.out.printf("%d초 이내에 타격할 위치를 선택해주세요(스윙하지 않으려면 %d번을 입력해주세요): ", TimeOut.SELECT_ZONE.getValue(), ZoneNumber.BALL.getValue());
             try {
                 while (!InputManager.isReady()) {
                     Thread.sleep(THREAD_SLEEP_TIME);

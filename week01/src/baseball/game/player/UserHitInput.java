@@ -15,11 +15,11 @@ public class UserHitInput {
         int selected = ZoneNumber.BALL.getValue();
 
         try {
-            selected = result.get(5000, TimeUnit.MILLISECONDS);
+            selected = result.get(TimeOut.SELECT_ZONE.getValue(), TimeOut.SELECT_ZONE.getTimeUnit());
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException("입력 오류가 발생했습니다.");
         } catch (TimeoutException e) {
-            System.out.printf("%n5초 이내에 입력하지 않으셨습니다. 자동으로 %d번이 선택됩니다.%n", ZoneNumber.BALL.getValue());
+            System.out.printf("%n%d초 이내에 입력하지 않으셨습니다. 자동으로 %d번이 선택됩니다.%n", TimeOut.SELECT_ZONE.getValue(), ZoneNumber.BALL.getValue());
             result.cancel(true);
         }
 
