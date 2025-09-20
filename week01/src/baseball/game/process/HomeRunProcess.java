@@ -3,8 +3,7 @@ package baseball.game.process;
 import baseball.game.BaseManager;
 import baseball.game.CountManager;
 import baseball.game.player.User;
-
-import static baseball.util.PrintUtil.printFormat;
+import baseball.util.PrintUtil;
 
 public class HomeRunProcess extends OnBaseProcess {
 
@@ -14,7 +13,7 @@ public class HomeRunProcess extends OnBaseProcess {
 
     @Override
     public void process() {
-        printFormat("홈런입니다!");
+        PrintUtil.processResult("홈런입니다!");
         process(HOMERUN);
     }
 }

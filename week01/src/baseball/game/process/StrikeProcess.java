@@ -2,8 +2,7 @@ package baseball.game.process;
 
 import baseball.game.CountManager;
 import baseball.game.player.User;
-
-import static baseball.util.PrintUtil.printFormat;
+import baseball.util.PrintUtil;
 
 public class StrikeProcess implements GameProcess {
 
@@ -19,10 +18,10 @@ public class StrikeProcess implements GameProcess {
     public void process() {
         countManager.increaseStrikeCount();
         if (countManager.isStrikeOut()) {
-            printFormat("루킹 삼진 아웃입니다!");
+            PrintUtil.processResult("루킹 삼진 아웃입니다!");
             processStrikeOut(user, countManager);
         } else {
-            printFormat("스트라이크입니다.");
+            PrintUtil.processResult("스트라이크입니다.");
         }
     }
 }

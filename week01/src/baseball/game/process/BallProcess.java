@@ -3,8 +3,7 @@ package baseball.game.process;
 import baseball.game.BaseManager;
 import baseball.game.CountManager;
 import baseball.game.player.User;
-
-import static baseball.util.PrintUtil.printFormat;
+import baseball.util.PrintUtil;
 
 public class BallProcess extends OnBaseProcess {
 
@@ -16,10 +15,10 @@ public class BallProcess extends OnBaseProcess {
     public void process() {
         getCountManager().increaseBallCount();
         if (getCountManager().isBaseOnBalls()) {
-            printFormat("볼넷입니다.");
+            PrintUtil.processResult("볼넷입니다.");
             process(SINGLE);
         } else {
-            printFormat("볼입니다.");
+            PrintUtil.processResult("볼입니다.");
         }
     }
 }

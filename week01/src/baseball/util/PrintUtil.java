@@ -23,4 +23,8 @@ public class PrintUtil {
     public static void printFormat(String message) {
         System.out.printf("%s%n%n", message);
     }
+
+    public static void processResult(String result) {
+        System.out.printf("결과: %s%n%n", result);
+    }
 }

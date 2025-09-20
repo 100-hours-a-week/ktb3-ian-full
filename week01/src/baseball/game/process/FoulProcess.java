@@ -1,8 +1,7 @@
 package baseball.game.process;
 
 import baseball.game.CountManager;
-
-import static baseball.util.PrintUtil.printFormat;
+import baseball.util.PrintUtil;
 
 public class FoulProcess implements GameProcess {
 
@@ -14,7 +13,7 @@ public class FoulProcess implements GameProcess {
 
     @Override
     public void process() {
-        printFormat("파울입니다.");
+        PrintUtil.processResult("파울입니다.");
         countManager.foul();
     }
 }
