@@ -2,8 +2,6 @@ package baseball.player;
 
 import baseball.game.HitResult;
 
-import static baseball.player.RandomHitUtil.*;
-
 public class ContactHitter extends Hitter {
 
     public ContactHitter(String name) {
@@ -11,11 +9,12 @@ public class ContactHitter extends Hitter {
     }
 
     @Override
-    public HitResult hit(int expectedZone, int actualZone) {
-        if (expectedZone != actualZone) {
-            return failGuessContactHitter();
-        }
+    public HitResult successHit() {
+        return RandomHitUtil.getSuccessHitResult(HitProbability.CONTACT_SUCCESS.getProbabilities());
+    }
 
-        return successGuessContactHitter();
+    @Override
+    public HitResult failHit() {
+        return RandomHitUtil.getFailHitResult(HitProbability.CONTACT_FAIL.getProbabilities());
     }
 }

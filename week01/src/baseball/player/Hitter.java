@@ -19,5 +19,6 @@ public abstract class Hitter extends Player {
         return BALL;
     }
 
-    public abstract HitResult hit(int expectedZone, int actualZone);
+    public abstract HitResult successHit();
+    public abstract HitResult failHit();
 }

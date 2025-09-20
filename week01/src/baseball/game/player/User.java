@@ -19,7 +19,11 @@ public class User extends GamePlayer {
             return hitter.doNotHit(actualZone);
         }
 
-        return hitter.hit(expectedZone, actualZone);
+        if (expectedZone == actualZone) {
+            return hitter.successHit();
+        }
+
+        return hitter.failHit();
     }
 
     public void next() {

@@ -2,9 +2,6 @@ package baseball.player;
 
 import baseball.game.HitResult;
 
-import static baseball.player.RandomHitUtil.failGuessPowerHitter;
-import static baseball.player.RandomHitUtil.successGuessPowerHitter;
-
 public class PowerHitter extends Hitter {
 
     public PowerHitter(String name) {
@@ -12,11 +9,12 @@ public class PowerHitter extends Hitter {
     }
 
     @Override
-    public HitResult hit(int expectedZone, int actualZone) {
-        if (expectedZone != actualZone) {
-            return failGuessPowerHitter();
-        }
+    public HitResult successHit() {
+        return RandomHitUtil.getSuccessHitResult(HitProbability.POWER_SUCCESS.getProbabilities());
+    }
 
-        return successGuessPowerHitter();
+    @Override
+    public HitResult failHit() {
+        return RandomHitUtil.getFailHitResult(HitProbability.POWER_SUCCESS.getProbabilities());
     }
 }
