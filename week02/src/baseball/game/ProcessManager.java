@@ -1,7 +1,6 @@
 package baseball.game;
 
 import baseball.game.process.GameProcess;
-import baseball.util.RandomUtil;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -11,8 +10,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ProcessManager {
-
-    private static final int STOLEN_BASE_ATTEMPT_PROBABILITY = 50;
 
     private final ExecutorService executor;
     private final BaseManager baseManager;
@@ -32,16 +29,10 @@ public class ProcessManager {
 
     public void process(GameProcess gameProcess) {
         try {
-            int attemptProb = RandomUtil.getProbability();
             Future<?> resultHit = executor.submit(new HitTask(gameProcess, lock, stolenBaseCondition, isStolenBaseDone));
+            Future<?> resultStolenBase = executor.submit(new StolenBaseTask(baseManager, countManager, lock, stolenBaseCondition, isStolenBaseDone));
 
-            if (baseManager.canAttemptStolenBase() && attemptProb < STOLEN_BASE_ATTEMPT_PROBABILITY) {
-                Future<?> resultStolenBase = executor.submit(new StolenBaseTask(baseManager, countManager, lock, stolenBaseCondition, isStolenBaseDone));
-                resultStolenBase.get();
-            } else {
-                isStolenBaseDone.set(true);
-            }
-
+            resultStolenBase.get();
             resultHit.get();
             isStolenBaseDone.set(false);
         } catch (InterruptedException | ExecutionException e) {
