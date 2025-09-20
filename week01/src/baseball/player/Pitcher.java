@@ -6,6 +6,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Pitcher extends Player {
 
+    private static final int STRIKE_PROBABILITY = 70;
+
     public Pitcher(String name) {
         super(name);
     }
@@ -13,7 +15,7 @@ public class Pitcher extends Player {
     public int pitch() {
         int rand = ThreadLocalRandom.current().nextInt(100);
 
-        if (rand < 70) {
+        if (rand < STRIKE_PROBABILITY) {
             return ThreadLocalRandom.current().nextInt(1, 10);
         }
 
