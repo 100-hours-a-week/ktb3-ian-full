@@ -5,7 +5,7 @@ public class BaseManager {
     private final boolean[] bases;
 
     public BaseManager() {
-        bases = new boolean[3];
+        this.bases = new boolean[3];
     }
 
     public int moveBase(int runBase) {
@@ -15,6 +15,19 @@ public class BaseManager {
         score += moveHitter(runBase);
 
         return score;
+    }
+
+    public void successStolenBase() {
+        bases[1] = true;
+        bases[0] = false;
+    }
+
+    public void failStolenBase() {
+        bases[0] = false;
+    }
+
+    public boolean canAttemptStolenBase() {
+        return bases[0] && !bases[1];
     }
 
     public void display() {

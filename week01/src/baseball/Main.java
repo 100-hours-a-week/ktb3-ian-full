@@ -44,7 +44,7 @@ public class Main {
                 switch (input) {
                     case "1" -> {
                         System.out.println("게임을 시작합니다.");
-                        GameService gameService = setUp(teamSelector, levelSelector, hitInputManager);
+                        GameService gameService = setUp(executor, teamSelector, levelSelector, hitInputManager);
                         gameService.start();
                     }
                     case "2" -> {
@@ -57,11 +57,12 @@ public class Main {
         }
     }
 
-    private static GameService setUp(TeamSelector teamSelector, LevelSelector levelSelector, HitInputManager hitInputManager) {
-        CountManager countManager = new CountManager();
-        BaseManager baseManager = new BaseManager();
+    private static GameService setUp(ExecutorService executor, TeamSelector teamSelector, LevelSelector levelSelector, HitInputManager hitInputManager) {
         User user = new User(teamSelector.select(), USER_INIT_SCORE);
         Computer computer = new Computer(teamSelector.random(), levelSelector.select());
+        CountManager countManager = new CountManager();
+        BaseManager baseManager = new BaseManager();
+        ProcessManager processManager = new ProcessManager(executor, baseManager, countManager);
         Map<HitResult, GameProcess> hitResultToGameProcess = Map.of(
                 BALL, new BallProcess(user, baseManager, countManager),
                 STRIKE, new StrikeProcess(user, countManager),
@@ -72,8 +73,7 @@ public class Main {
                 HOMERUN, new HomeRunProcess(user, baseManager, countManager),
                 FOUL, new FoulProcess(countManager)
         );
-        GameManager gameManager = new GameManager(user, computer, baseManager, countManager, hitInputManager, hitResultToGameProcess);
-        return new GameService(gameManager);
+        GameManager gameManager = new GameManager(user, computer, baseManager, countManager, hitInputManager);
+        return new GameService(gameManager, processManager, hitResultToGameProcess);
     }
 }
-

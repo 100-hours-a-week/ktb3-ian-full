@@ -1,13 +1,19 @@
 package baseball.game;
 
-import baseball.game.player.*;
+import baseball.game.process.GameProcess;
+
+import java.util.Map;
 
 public class GameService {
 
     private final GameManager gameManager;
+    private final ProcessManager processManager;
+    private final Map<HitResult, GameProcess> hitResultToGameProcess;
 
-    public GameService(GameManager gameManager) {
+    public GameService(GameManager gameManager, ProcessManager processManager, Map<HitResult, GameProcess> hitResultToGameProcess) {
         this.gameManager = gameManager;
+        this.processManager = processManager;
+        this.hitResultToGameProcess = hitResultToGameProcess;
     }
 
     public void start() {
@@ -15,7 +21,8 @@ public class GameService {
 
         while (!gameManager.isGameOver()) {
             gameManager.display();
-            gameManager.process();
+            HitResult hitResult = gameManager.hit();
+            processManager.process(hitResultToGameProcess.get(hitResult));
         }
 
         gameManager.finishGame();

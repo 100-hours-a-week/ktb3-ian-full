@@ -3,8 +3,6 @@ package baseball.game;
 import baseball.game.player.*;
 import baseball.game.process.*;
 
-import java.util.Map;
-
 public class GameManager {
 
     private final User user;
@@ -12,29 +10,23 @@ public class GameManager {
     private final BaseManager baseManager;
     private final CountManager countManager;
     private final HitInputManager hitInputManager;
-    private final Map<HitResult, GameProcess> hitResultToGameProcess;
 
-    public GameManager(User user, Computer computer, BaseManager baseManager, CountManager countManager, HitInputManager hitInputManager, Map<HitResult, GameProcess> hitResultToGameProcess) {
+    public GameManager(User user, Computer computer, BaseManager baseManager, CountManager countManager, HitInputManager hitInputManager) {
         this.user = user;
         this.computer = computer;
         this.baseManager = baseManager;
         this.countManager = countManager;
         this.hitInputManager = hitInputManager;
-        this.hitResultToGameProcess = hitResultToGameProcess;
     }
 
     public boolean isGameOver() {
         return countManager.isGameOver() || user.getScore() > computer.getScore();
     }
 
-    public void process() {
+    public HitResult hit() {
         int expectedZone = hitInputManager.selectZone();
         int actualZone = computer.pitch();
-
-        System.out.print("결과: ");
-
-        HitResult hitResult = user.hit(expectedZone, actualZone);
-        hitResultToGameProcess.get(hitResult).process();
+        return user.hit(expectedZone, actualZone);
     }
 
     public void display() {

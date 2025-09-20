@@ -1,5 +1,7 @@
 package baseball.game;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class CountManager {
 
     private static final int STRIKE_OUT_COUNT = 3;
@@ -9,7 +11,11 @@ public class CountManager {
 
     private int ballCount;
     private int strikeCount;
-    private int outCount;
+    private final AtomicInteger outCount;
+
+    public CountManager() {
+        outCount = new AtomicInteger(0);
+    }
 
     public boolean isStrikeOut() {
         return strikeCount == STRIKE_OUT_COUNT;
@@ -20,7 +26,7 @@ public class CountManager {
     }
 
     public boolean isGameOver() {
-        return outCount == GAME_OVER_OUT_COUNT;
+        return outCount.get() == GAME_OVER_OUT_COUNT;
     }
 
     public void foul() {
@@ -38,7 +44,9 @@ public class CountManager {
     }
 
     public void increaseOutCount() {
-        outCount++;
+        if (!isGameOver()) {
+            outCount.incrementAndGet();
+        }
     }
 
     public void resetStrikeCount() {
@@ -50,6 +58,6 @@ public class CountManager {
     }
 
     public void display() {
-        System.out.printf("| B: %d | S: %d | O: %d |%n", ballCount, strikeCount, outCount);
+        System.out.printf("| B: %d | S: %d | O: %d |%n", ballCount, strikeCount, outCount.get());
     }
 }
