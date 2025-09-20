@@ -1,5 +1,7 @@
 package baseball.player;
 
+import baseball.game.player.ZoneNumber;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Pitcher extends Player {
@@ -15,6 +17,6 @@ public class Pitcher extends Player {
             return ThreadLocalRandom.current().nextInt(1, 10);
         }
 
-        return 0;
+        return ZoneNumber.BALL.getValue();
     }
 }

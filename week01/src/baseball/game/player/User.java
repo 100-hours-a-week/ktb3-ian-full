@@ -15,7 +15,7 @@ public class User extends GamePlayer {
     public HitResult hit(int expectedZone, int actualZone) {
         Hitter hitter = getTeam().getHitters().get(order);
 
-        if (expectedZone == 0) {
+        if (expectedZone == ZoneNumber.BALL.getValue()) {
             return hitter.doNotHit(actualZone);
         }
 
