@@ -1,9 +1,9 @@
 package baseball.player;
 
 import baseball.game.HitResult;
+import baseball.util.RandomUtil;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static baseball.game.HitResult.*;
 
@@ -25,10 +25,6 @@ public class RandomHitUtil {
         return findFailHitResult(HitProbability.POWER_FAIL.getProbabilities());
     }
 
-    private static int getRandom() {
-        return ThreadLocalRandom.current().nextInt(100);
-    }
-
     private static HitResult findSuccessHitResult(List<HitProbability.ProbabilityPair> probabilities) {
         return findHitResult(probabilities, SINGLE);
     }
@@ -38,7 +34,7 @@ public class RandomHitUtil {
     }
 
     private static HitResult findHitResult(List<HitProbability.ProbabilityPair> probabilities, HitResult defaultHitResult) {
-        int rand = getRandom();
+        int rand = RandomUtil.getProbability();
 
         for (HitProbability.ProbabilityPair pair : probabilities) {
             if (rand <= pair.getProbability()) {

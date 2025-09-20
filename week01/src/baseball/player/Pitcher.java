@@ -1,6 +1,7 @@
 package baseball.player;
 
 import baseball.game.player.ZoneNumber;
+import baseball.util.RandomUtil;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -13,7 +14,7 @@ public class Pitcher extends Player {
     }
 
     public int pitch() {
-        int rand = ThreadLocalRandom.current().nextInt(100);
+        int rand = RandomUtil.getProbability();
 
         if (rand < STRIKE_PROBABILITY) {
             return ThreadLocalRandom.current().nextInt(1, 10);
