@@ -1,9 +1,11 @@
 package baseball.team;
 
 import baseball.InputManager;
+import baseball.util.PrintUtil;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static baseball.util.PrintUtil.*;
 
@@ -16,7 +18,9 @@ public class TeamSelector {
     }
 
     public Team select() {
-        while (true) {
+        AtomicReference<Team> selected = new AtomicReference<>();
+
+        while (selected.get() == null) {
             teamNames();
             String input = InputManager.readLine("원하는 팀을 선택해주세요: ");
 
@@ -25,17 +29,14 @@ public class TeamSelector {
                 continue;
             }
 
-            Team team = teamRepository.findByName(input)
-                    .orElse(null);
-
-            if (team == null) {
-                invalidInput();
-                continue;
-            }
-
-            printFormat(String.format("%s을(를) 선택하셨습니다.", team.getName()));
-            return team;
+            teamRepository.findByName(input)
+                    .ifPresentOrElse(
+                            (team) -> setTeam(selected, team),
+                            PrintUtil::invalidInput
+                    );
         }
+
+        return selected.get();
     }
 
     public Team random() {
@@ -45,5 +46,10 @@ public class TeamSelector {
 
         return teamRepository.findByName(teamNames.get(idx))
                 .orElse(TeamData.getDefaultTeam());
+    }
+
+    private void setTeam(AtomicReference<Team> target, Team team) {
+        printFormat(String.format("%s을(를) 선택하셨습니다.", team.getName()));
+        target.set(team);
     }
 }
