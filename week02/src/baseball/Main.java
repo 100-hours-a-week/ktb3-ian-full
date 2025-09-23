@@ -11,12 +11,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static baseball.game.HitResult.*;
-import static baseball.game.HitResult.DOUBLE;
-import static baseball.game.HitResult.FOUL;
-import static baseball.game.HitResult.HOMERUN;
-import static baseball.game.HitResult.SINGLE;
-import static baseball.game.HitResult.TRIPLE;
 import static baseball.util.PrintUtil.invalidInput;
 
 public class Main {
@@ -63,17 +57,8 @@ public class Main {
         CountManager countManager = new CountManager();
         BaseManager baseManager = new BaseManager();
         ProcessManager processManager = new ProcessManager(executor, baseManager, countManager);
-        Map<HitResult, GameProcess> hitResultToGameProcess = Map.of(
-                BALL, new BallProcess(user, baseManager, countManager),
-                STRIKE, new StrikeProcess(user, countManager),
-                MISS, new MissProcess(user, countManager),
-                SINGLE, new SingleProcess(user, baseManager, countManager),
-                DOUBLE, new DoubleProcess(user, baseManager, countManager),
-                TRIPLE, new TripleProcess(user, baseManager, countManager),
-                HOMERUN, new HomeRunProcess(user, baseManager, countManager),
-                FOUL, new FoulProcess(countManager)
-        );
         GameManager gameManager = new GameManager(user, computer, baseManager, countManager, hitInputManager);
+        Map<HitResult, GameProcess> hitResultToGameProcess = GameProcessFactory.setUp(user, baseManager, countManager);
         return new GameService(gameManager, processManager, hitResultToGameProcess);
     }
 }
