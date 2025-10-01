@@ -1,0 +1,64 @@
+package baseball;
+
+import baseball.game.*;
+import baseball.game.player.*;
+import baseball.game.process.*;
+import baseball.level.LevelSelector;
+import baseball.team.TeamRepository;
+import baseball.team.TeamSelector;
+
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import static baseball.util.PrintUtil.invalidInput;
+
+public class Main {
+
+    private static final int NUM_THREAD = 3;
+    private static final int USER_INIT_SCORE = 0;
+
+    public static void main(String[] args) {
+        try (ExecutorService executor = Executors.newFixedThreadPool(NUM_THREAD)) {
+            TeamRepository teamRepository = new TeamRepository();
+            TeamSelector teamSelector = new TeamSelector(teamRepository);
+            LevelSelector levelSelector = new LevelSelector();
+            HitInputManager hitInputManager = new HitInputManager(executor, new HitInputTask(), new TimerTask());
+
+            System.out.println("===== KTB 프로야구 게임에 오신걸 환영합니다! =====\n");
+
+            while (true) {
+                System.out.println("""
+                    - 게임 시작: 1
+                    - 게임 종료: 2
+                    """);
+
+                String input = InputManager.readLine("원하는 키를 선택해주세요: ");
+
+                switch (input) {
+                    case "1" -> {
+                        System.out.println("게임을 시작합니다.");
+                        GameService gameService = setUp(executor, teamSelector, levelSelector, hitInputManager);
+                        gameService.start();
+                    }
+                    case "2" -> {
+                        System.out.println("게임을 종료합니다.");
+                        return;
+                    }
+                    default -> invalidInput();
+                }
+            }
+        }
+    }
+
+    private static GameService setUp(ExecutorService executor, TeamSelector teamSelector, LevelSelector levelSelector, HitInputManager hitInputManager) {
+        User user = new User(teamSelector.select(), USER_INIT_SCORE);
+        Computer computer = new Computer(teamSelector.random(), levelSelector.select());
+        CountManager countManager = new CountManager();
+        BaseManager baseManager = new BaseManager();
+        ProcessManager processManager = new ProcessManager(executor, baseManager, countManager);
+        GameManager gameManager = new GameManager(user, computer, baseManager, countManager, hitInputManager);
+        Map<HitResult, GameProcess> hitResultToGameProcess = GameProcessFactory.setUp(user, baseManager, countManager);
+        return new GameService(gameManager, processManager, hitResultToGameProcess);
+    }
+}

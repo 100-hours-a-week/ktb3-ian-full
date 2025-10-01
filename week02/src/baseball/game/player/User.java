@@ -1,0 +1,36 @@
+package baseball.game.player;
+
+import baseball.game.HitResult;
+import baseball.team.Team;
+import baseball.player.Hitter;
+
+public class User extends GamePlayer {
+
+    private int order;
+
+    public User(Team team, int score) {
+        super(team, score);
+    }
+
+    public HitResult hit(int expectedZone, int actualZone) {
+        Hitter hitter = getTeam().getHitters().get(order);
+
+        if (expectedZone == ZoneNumber.BALL.getValue()) {
+            return hitter.doNotHit(actualZone);
+        }
+
+        if (expectedZone == actualZone) {
+            return hitter.successHit();
+        }
+
+        return hitter.failHit();
+    }
+
+    public void next() {
+        order = (order + 1) % 9;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+}
